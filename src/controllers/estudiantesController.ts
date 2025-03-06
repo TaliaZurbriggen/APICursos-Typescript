@@ -35,19 +35,8 @@ class EstudiantesController {
     }
 
     actualizar(req: Request, res: Response){
-        const {id} = req.params
         try{
-            const { dni, nombre, apellido, email } = req.body;
-             db.query(`UPDATE estudiantes
-             SET dni = ?, nombre = ?, apellido = ?, email = ?
-             WHERE id = ?; `,
-                 [dni, nombre, apellido, email, id], (err, rows) => {
-                     if (err) {
-                         res.status(400).send(err);
-                     }
-                     if(rows.affectedRows == 1)
-                         res.status(200).json({ respuesta: 'Registro actualizado con exito' })
-                     })
+            res.send('Actualizar estudiante')
          }catch (err){
                 if(err instanceof Error)                       
                     res.status(500).send(err.message)
@@ -56,16 +45,8 @@ class EstudiantesController {
 
 
     borrar(req: Request, res: Response){
-        const {id} = req.params
         try{
-            db.query(`DELETE FROM estudiantes WHERE id = ?`, [id],
-                (err, rows) => {
-                    if (err) {
-                        res.status(400).send(err);
-                    }
-                    if(rows.affectedRows == 1)
-                        res.status(200).json({ respuesta: 'Registro eliminado con exito' })
-                    })
+            res.send('Borrar estudiante')
         }catch (err){
             if(err instanceof Error)                       
                 res.status(500).send(err.message)
@@ -73,4 +54,4 @@ class EstudiantesController {
     }
 }
 
-module.exports = new EstudiantesController()
+export default new EstudiantesController()

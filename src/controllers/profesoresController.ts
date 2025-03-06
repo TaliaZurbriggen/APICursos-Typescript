@@ -54,4 +54,4 @@ class ProfesoresController {
     }
 }
 
-module.exports = new ProfesoresController()
+export default new ProfesoresController()
