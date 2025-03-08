@@ -22,7 +22,7 @@ export class Curso {
 
     @ManyToOne(()=> Profesor, (profesor) => profesor.cursos)
     @JoinColumn({name : 'profesor_id'})
-    profesor: Profesor
+    profesor: Profesor;
 
     @ManyToMany(()=> Estudiante)
     @JoinTable({

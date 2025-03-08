@@ -1,42 +1,53 @@
 import { Request, Response } from "express";
-
+import { AppDataSource } from "../db/conexion";
+import { Profesor } from "../models/profesoresModel";
 
 class ProfesoresController {
     constructor(){
 
     }
 
-    consultar(req: Request, res: Response){
+    async consultar(req: Request, res: Response){
         try{
-            res.send('consultar detalle')
+            const data = await AppDataSource.getRepository(Profesor).find();
+            res.status(200).json(data)
         }catch (err){
             if(err instanceof Error)
             res.status(500).send(err.message)
         }
     }
 
-    consultarDetalle(req: Request, res: Response){
+    async consultarDetalle(req: Request, res: Response){
         const {id} = req.params
         try{
-            res.send('consultar detalle de profesor')
+            const registro = await AppDataSource.getRepository(Profesor).findOneBy({id: Number(id)})
+            res.status(200).json(registro)
             }catch (err){
                 if(err instanceof Error)
                 res.status(500).send(err.message)
             }
     }
 
-    ingresar(req: Request, res: Response){
+    async ingresar(req: Request, res: Response){
         try{
-            res.send('Ingresar profesor')
+            const registro = await AppDataSource.getRepository(Profesor).save(req.body)
+            res.status(201).json(registro)
             }catch (err){
                 if(err instanceof Error)
                 res.status(500).send(err.message)
             }
     }
 
-    actualizar(req: Request, res: Response){
+    async actualizar(req: Request, res: Response){
+        const {id} = req.params
         try{
-            res.send('Actualizar profesor')
+            const registro = await AppDataSource.getRepository(Profesor).findOneBy({id: Number(id)})
+            if(!registro){
+                throw new Error('Profesor no encontrado')
+            }
+            await AppDataSource.getRepository(Profesor).update({id: Number(id)}, req.body)
+            const registroActualizado = await AppDataSource.getRepository(Profesor).findOneBy({id: Number(id)})
+            res.status(200).json(registroActualizado)
          }catch (err){
                 if(err instanceof Error)                       
                     res.status(500).send(err.message)
@@ -44,9 +55,15 @@ class ProfesoresController {
     }
 
 
-    borrar(req: Request, res: Response){
+    async borrar(req: Request, res: Response){
+        const {id} = req.params
         try{
-            res.send('Borrar profesor')
+            const registro = await AppDataSource.getRepository(Profesor).findOneBy({id: Number(id)})
+            if(!registro){
+                throw new Error('Profesor no encontrado')
+            }
+            await AppDataSource.getRepository(Profesor).delete({id: Number(id)})
+            res.status(204).send('Registro borrado con exito')
         }catch (err){
             if(err instanceof Error)                       
                 res.status(500).send(err.message)
